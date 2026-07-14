@@ -1,8 +1,9 @@
 import dotenv from "dotenv";
+dotenv.config();
 import app from "./src/app.js";
 import connectDB from "./src/config/database.js";
 
-dotenv.config();
+console.log("RESEND:", process.env.RESEND_API_KEY);
 
 const PORT = process.env.PORT || 5000;
 
