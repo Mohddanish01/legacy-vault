@@ -41,3 +41,10 @@ export const verifyOtpSchema = z.object({
         .length(6, "OTP must be exactly 6 digits")
         .regex(/^\d+$/, "OTP must contain only digits"),
 });
+
+export const refreshTokenSchema = z.object({
+    refreshToken: z
+        .string()
+        .trim()
+        .min(1, "Refresh token is required"),
+});

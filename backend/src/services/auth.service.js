@@ -7,6 +7,9 @@ import { OTP_PURPOSE } from "../constants/otpPurpose.js";
 import * as emailService from "./email.service.js";
 import * as tokenService from "./token.service.js";
 import * as otpRepository from "../repositories/otp.repository.js";
+import * as sessionService from "./session.service.js";
+import { generateTokenId } from "../utils/tokenId.js";
+import * as sessionRepository from "../repositories/session.repository.js";
 
 export const register = async (userData) => {
 
@@ -123,17 +126,77 @@ export const verifyOtp = async (userData) => {
         OTP_PURPOSE.LOGIN
     );
 
+    const tokenId = generateTokenId();
+
     const accessToken = tokenService.generateAccessToken(
         user._id
     );
 
     const refreshToken = tokenService.generateRefreshToken(
-        user._id
+        user._id,
+        tokenId
     );
+
+    await sessionService.createSession({
+        userId: user._id,
+        tokenId,
+        refreshToken,
+        userAgent: userData.userAgent,
+        ipAddress: userData.ipAddress,
+    });
 
     return {
         message: "Login successful",
         accessToken,
         refreshToken,
+    };
+}
+
+export const getCurrentUser = async (user) => {
+
+    const { password, ...safeUser } = user.toObject();
+
+    return safeUser;
+
+};
+
+export const refreshToken = async (userData) => {
+
+    const decoded = tokenService.verifyRefreshToken(
+        userData.refreshToken
+    );
+
+    const session = await sessionRepository.findSessionByTokenId(
+        decoded.tokenId
+    );
+
+    if (!session) {
+    throw new AppError(
+            "Session not found",
+            HTTP_STATUS.UNAUTHORIZED
+        );
+    }
+
+    const isTokenValid = await bcrypt.compare(
+        userData.refreshToken,
+        session.refreshToken
+    );
+
+    if (!isTokenValid) {
+    throw new AppError(
+            "Invalid refresh token",
+            HTTP_STATUS.UNAUTHORIZED
+        );
+    }
+
+    const accessToken =
+    tokenService.generateAccessToken(decoded.id);
+
+    await sessionRepository.updateLastActive(
+        session._id
+    );
+
+    return {
+        accessToken,
     };
 }

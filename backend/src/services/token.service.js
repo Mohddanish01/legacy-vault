@@ -14,11 +14,12 @@ export const generateAccessToken = (userId) => {
 
 };
 
-export const generateRefreshToken = (userId) => {
+export const generateRefreshToken = (userId, tokenId) => {
 
     return jwt.sign(
         {
             id: userId,
+            tokenId,
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
