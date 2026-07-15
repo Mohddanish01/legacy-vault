@@ -5,6 +5,8 @@ import bcrypt from "bcrypt";
 import * as otpService from "./otp.service.js";
 import { OTP_PURPOSE } from "../constants/otpPurpose.js";
 import * as emailService from "./email.service.js";
+import * as tokenService from "./token.service.js";
+import * as otpRepository from "../repositories/otp.repository.js";
 
 export const register = async (userData) => {
 
@@ -121,7 +123,17 @@ export const verifyOtp = async (userData) => {
         OTP_PURPOSE.LOGIN
     );
 
+    const accessToken = tokenService.generateAccessToken(
+        user._id
+    );
+
+    const refreshToken = tokenService.generateRefreshToken(
+        user._id
+    );
+
     return {
-        message: "OTP verified successfully",
+        message: "Login successful",
+        accessToken,
+        refreshToken,
     };
 }
