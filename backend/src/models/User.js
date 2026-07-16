@@ -42,6 +42,35 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+
+    phone: {
+      type: String,
+      trim: true,
+      default: null,
+    },
+
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Other"],
+      default: null,
+    },
+
+    dateOfBirth: {
+      type: Date,
+      default: null,
+    },
+
+    bio: {
+      type: String,
+      trim: true,
+      maxlength: 300,
+      default: "",
+    },
+
+    profilePicture: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,
