@@ -18,6 +18,7 @@ export const protect = asyncHandler(async (req, res, next) => {
 
     const decoded = tokenService.verifyAccessToken(token);
 
+
     const user = await authRepository.findUserById(decoded.id);
 
     if (!user) {
@@ -27,7 +28,9 @@ export const protect = asyncHandler(async (req, res, next) => {
         );
     }
 
-    req.user = user;
+    const { password, ...safeUser } = user.toObject();
+    req.user = safeUser;
+    req.auth = decoded;
 
     next();
 });

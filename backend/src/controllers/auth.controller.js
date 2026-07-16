@@ -65,3 +65,44 @@ export const refreshToken = asyncHandler(async (req, res) => {
     });
 
 });
+
+export const getUserSessions = asyncHandler(async (req, res) => {
+
+    const sessions = await authService.getUserSessions(
+        req.user._id,
+        req.auth.tokenId
+    );
+
+    res.status(HTTP_STATUS.OK).json({
+        success: true,
+        data: sessions,
+    });
+
+});
+
+export const logoutCurrentDevice = asyncHandler(async (req, res) => {
+
+    const data = await authService.logoutCurrentDevice(
+        req.user._id,
+        req.params.sessionId
+    );
+
+    res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: data.message,
+    });
+
+});
+
+export const logoutAllDevices = asyncHandler(async (req, res) => {
+
+    const data = await authService.logoutAllDevices(
+        req.user._id
+    );
+
+    res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: data.message,
+    });
+
+});

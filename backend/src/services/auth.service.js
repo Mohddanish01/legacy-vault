@@ -10,6 +10,7 @@ import * as otpRepository from "../repositories/otp.repository.js";
 import * as sessionService from "./session.service.js";
 import { generateTokenId } from "../utils/tokenId.js";
 import * as sessionRepository from "../repositories/session.repository.js";
+import {UAParser} from "ua-parser-js";
 
 export const register = async (userData) => {
 
@@ -129,7 +130,8 @@ export const verifyOtp = async (userData) => {
     const tokenId = generateTokenId();
 
     const accessToken = tokenService.generateAccessToken(
-        user._id
+        user._id,
+        tokenId
     );
 
     const refreshToken = tokenService.generateRefreshToken(
@@ -190,7 +192,7 @@ export const refreshToken = async (userData) => {
     }
 
     const accessToken =
-    tokenService.generateAccessToken(decoded.id);
+    tokenService.generateAccessToken(decoded.id, decoded.tokenId);
 
     await sessionRepository.updateLastActive(
         session._id
@@ -199,4 +201,90 @@ export const refreshToken = async (userData) => {
     return {
         accessToken,
     };
-}
+};
+
+export const getUserSessions = async (
+    userId,
+    currentTokenId
+) => {
+    const sessions = await sessionRepository.findSessionsByUser(userId);
+
+    return sessions.map((session) => {
+
+        const parser = new UAParser(session.userAgent);
+
+        const browser = parser.getBrowser();
+
+        const os = parser.getOS();
+
+        const device = parser.getDevice();
+
+        const deviceType = device.type || "Desktop";
+
+        const isCurrent = session.tokenId === currentTokenId;
+
+        return {
+
+            id: session._id.toString(),
+
+            browser: browser.name || "Unknown",
+
+            browserVersion: browser.version || "",
+
+            os: os.name || "Unknown",
+
+            osVersion: os.version || "",
+
+            device: deviceType,
+
+            ipAddress: session.ipAddress,
+
+            lastActive: session.lastActive,
+
+            // current: session.tokenId === currentTokenId,
+            current: isCurrent,
+
+        };
+
+    });
+};
+
+export const logoutCurrentDevice = async (
+    userId,
+    sessionId
+) => {
+    const session = await sessionRepository.findSessionById(sessionId);
+
+    if (!session) {
+        throw new AppError(
+            "Session not found",
+            HTTP_STATUS.NOT_FOUND
+        );
+    }
+
+    if (session.userId.toString() !== userId.toString()) {
+        throw new AppError(
+            "Unauthorized",
+            HTTP_STATUS.UNAUTHORIZED
+        );
+    }
+
+    await sessionRepository.deleteSessionById(sessionId);
+
+    return {
+        message: "Logged out successfully",
+    };
+};
+
+export const logoutAllDevices = async (
+    userId
+) => {
+    
+    await sessionRepository.deleteAllSessions(
+        userId
+    );
+
+    return {
+        message: "Logged out from all devices successfully",
+    };
+};

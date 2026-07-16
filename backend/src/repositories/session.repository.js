@@ -9,7 +9,16 @@ export const findSessionByTokenId = async (tokenId) => {
 };
 
 export const findSessionsByUser = async (userId) => {
-    return await Session.find({ userId });
+    return await Session
+    .find({ userId })
+    .sort({lastActive: -1})
+    .limit(20);
+};
+
+export const findSessionById = async (sessionId) => {
+
+    return await Session.findById(sessionId);
+
 };
 
 export const deleteSessionById = async (sessionId) => {
@@ -31,3 +40,4 @@ export const updateLastActive = async (sessionId) => {
         }
     );
 };
+

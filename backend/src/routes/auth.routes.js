@@ -18,4 +18,13 @@ router.get("/me", protect, authController.getCurrentUser
 router.post("/refresh-token", validate(refreshTokenSchema), authController.refreshToken
 );
 
+router.get("/sessions", protect, authController.getUserSessions
+);
+
+router.delete("/sessions/:sessionId", protect, authController.logoutCurrentDevice
+);
+
+router.delete("/sessions", protect, authController.logoutAllDevices
+);
+
 export default router;
