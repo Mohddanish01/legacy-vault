@@ -6,23 +6,23 @@ LegacyVault enables users to securely create, manage, and share digital wills wi
 
 ---
 
-# 🚀 Features
+## ✨ Features
 
-## 🔐 Authentication
+### 🔐 Authentication
+- User Registration
+- Secure Login with Email OTP
+- JWT Authentication (Access + Refresh Tokens)
+- Refresh Token Rotation
+- Session Management
+- View Logged-in Devices
+- Logout Current Device
+- Logout All Devices
 
-- ✅ User Registration
-- ✅ Secure Password Hashing (bcrypt)
-- ✅ Email & Password Login
-- ✅ OTP-based Login Verification
-- ✅ Email OTP using Resend
-- ✅ JWT Access Token Authentication
-- ✅ JWT Refresh Token Authentication
-- ✅ Protected Routes Middleware
-- ✅ Current User API
-- ✅ Secure Refresh Token Validation
-- ✅ Refresh Token Hashing
-- ✅ Session Management
-- ✅ Automatic Session Expiry (TTL)
+### 👤 Profile Management
+- View Profile
+- Update Profile
+- Change Password
+- Force Logout from All Devices after Password Change
 
 ---
 
@@ -86,34 +86,36 @@ src/
 
 # 📌 Current Progress
 
-## ✅ Completed
+## 🚀 Implemented APIs
 
-- User Registration
-- Login System
-- OTP Generation
-- Email OTP
-- OTP Verification
-- JWT Authentication
-- Refresh Token
-- Session Management
-- Protected Routes
-- Current User API
+### Authentication
+- POST /auth/register
+- POST /auth/login
+- POST /auth/verify-otp
+- POST /auth/refresh-token
+- GET /auth/me
 
----
+### Sessions
+- GET /auth/sessions
+- DELETE /auth/sessions/:sessionId
+- DELETE /auth/sessions
 
-## 🚧 Coming Soon
-
-- Logged-in Devices
-- Logout Current Device
-- Logout From All Devices
-- Email Verification
-- Forgot Password
-- Password Reset
-- Digital Will Module
-- Nominee Management
-- Emergency Access
-- Notifications
+### Profile
+- GET /profile
+- PUT /profile
+- PUT /profile/change-password
 - Admin Dashboard
+
+## 📋 Roadmap
+
+- [x] Authentication
+- [x] Session Management
+- [x] Profile Management
+- [ ] Nominee Management
+- [ ] Digital Will Management
+- [ ] Secure File Vault
+- [ ] Emergency Access
+- [ ] Admin Dashboard
 
 ---
 
@@ -150,18 +152,6 @@ Run the server
 ```bash
 npm run dev
 ```
-
----
-
-# 📖 API Modules
-
-### Authentication
-
-- Register
-- Login
-- Verify OTP
-- Refresh Token
-- Current User
 
 ---
 
