@@ -13,6 +13,16 @@ export const findNomineeById = async (nomineeId) => {
     return await Nominee.findById(nomineeId);
 };
 
+export const findNomineeByIdAndUser = async (
+    nomineeId,
+    userId
+) => {
+    return await Nominee.findOne({
+        _id: nomineeId,
+        userId,
+    });
+};
+
 export const findNomineeByEmail = async (
     userId,
     email
