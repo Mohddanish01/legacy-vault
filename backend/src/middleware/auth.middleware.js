@@ -29,7 +29,12 @@ export const protect = asyncHandler(async (req, res, next) => {
     }
 
     const { password, ...safeUser } = user.toObject();
-    req.user = safeUser;
+
+    req.user = {
+        ...safeUser,
+        id: safeUser._id.toString(),
+    };
+
     req.auth = decoded;
 
     next();
