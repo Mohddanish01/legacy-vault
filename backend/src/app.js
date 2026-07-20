@@ -5,6 +5,7 @@ import profileRoutes from "./routes/profile.routes.js";
 import nomineeRoutes from "./routes/nominee.routes.js";
 import willRoutes from "./routes/will.routes.js";
 import vaultRoutes from "./routes/vault.routes.js";
+import secureFileRoutes from "./routes/secureFile.routes.js"
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use("/api/v1/profile", profileRoutes);
 app.use("/api/v1/nominees", nomineeRoutes);
 app.use("/api/v1/wills", willRoutes);
 app.use("/api/v1/vaults", vaultRoutes);
+app.use("/api/v1/secure-files",secureFileRoutes);
 app.use(errorHandler);
 
 export default app;
