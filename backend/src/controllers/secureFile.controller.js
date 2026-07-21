@@ -75,12 +75,34 @@ export const updateSecureFile = asyncHandler(
     }
 );
 
+// export const deleteSecureFile = asyncHandler(
+//     async (req, res) => {
+
+//         await secureFileService.deleteSecureFile(
+//             req.user.id,
+//             req.params.id
+//         );
+
+//         res.status(HTTP_STATUS.OK).json({
+//             success: true,
+//             message: "Secure file deleted successfully.",
+//         });
+
+//     }
+// );
 export const deleteSecureFile = asyncHandler(
     async (req, res) => {
 
+        console.log(req.params.id);
+        console.log(JSON.stringify(req.params.id));
+
+        console.log(req.params.id.length);
+        console.log(req.params.id.split(""));
+
         await secureFileService.deleteSecureFile(
             req.user.id,
-            req.params.id
+            req.params.id.trim()
+
         );
 
         res.status(HTTP_STATUS.OK).json({
@@ -90,7 +112,6 @@ export const deleteSecureFile = asyncHandler(
 
     }
 );
-
 export const downloadSecureFile = asyncHandler(
     async (req, res) => {
 

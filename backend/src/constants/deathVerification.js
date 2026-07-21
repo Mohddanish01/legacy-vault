@@ -1,0 +1,9 @@
+export const VERIFICATION_STATUS = {
+    PENDING: "PENDING",
+    APPROVED: "APPROVED",
+    REJECTED: "REJECTED",
+};
+
+export const VERIFICATION_STATUS_VALUES = Object.values(
+    VERIFICATION_STATUS
+);

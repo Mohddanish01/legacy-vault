@@ -6,6 +6,8 @@ import { HTTP_STATUS } from "../constants/httpStatus.js";
 
 import * as secureFileRepository from "../repositories/secureFile.repository.js";
 import * as fileEncryptionService from "./fileEncryption.service.js";
+import { ensureDirectoryExists } from "../utils/file.js";
+
 
 export const createSecureFile = async (
     userId,
@@ -23,12 +25,18 @@ export const createSecureFile = async (
     const encryptedFileName =
         `${file.filename}.enc`;
 
-    const encryptedFilePath =
-        path.join(
-            "uploads",
-            "encrypted",
-            encryptedFileName
-        );
+    const userDirectory = path.join(
+        "uploads",
+        "encrypted",
+        userId.toString()
+    );
+
+    await ensureDirectoryExists(userDirectory);
+
+    const encryptedFilePath = path.join(
+        userDirectory,
+        encryptedFileName
+    );
 
     const { iv, authTag } =
         await fileEncryptionService.encryptFile(
